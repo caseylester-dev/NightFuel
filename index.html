@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightFuel — Promise yourself. Follow through.</title>
+    <meta name="description" content="Capture your late-night motivation. Get reminded on your schedule. Track if you follow through. Free for iPhone.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0f1119;
+            --bg-card: #1a1d29;
+            --accent: #f59e0b;
+            --accent-soft: rgba(245, 158, 11, 0.12);
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #22c55e;
+            --border: #2a2d3a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Stars background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 85% 90%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1.5px 1.5px at 60% 85%, rgba(245,158,11,0.4), transparent),
+                radial-gradient(1.5px 1.5px at 20% 50%, rgba(245,158,11,0.3), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 80px 0 60px;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            background: var(--accent);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: clamp(18px, 3vw, 22px);
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .app-store-badge {
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .app-store-badge:hover { transform: scale(1.05); }
+        .app-store-badge img { height: 52px; }
+
+        .coming-soon {
+            display: inline-block;
+            padding: 12px 32px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+        }
+
+        /* Phone mockups */
+        .screenshots {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 40px 0 80px;
+            overflow-x: auto;
+        }
+
+        .phone-frame {
+            width: 220px;
+            min-width: 220px;
+            background: var(--bg-card);
+            border-radius: 28px;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+        }
+        .phone-frame:hover { transform: translateY(-8px); }
+        .phone-frame:nth-child(2) { transform: translateY(-16px); }
+        .phone-frame:nth-child(2):hover { transform: translateY(-24px); }
+
+        .phone-frame img {
+            width: 100%;
+            display: block;
+        }
+
+        .phone-placeholder {
+            aspect-ratio: 9/19.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* How it works */
+        .how-it-works {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .step h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Features */
+        .features {
+            padding: 60px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .feature h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .feature p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Privacy callout */
+        .privacy {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .privacy-badge span {
+            font-size: 22px;
+        }
+
+        .privacy p {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--accent); }
+
+        .footer .copyright {
+            font-size: 13px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            .hero { padding: 60px 0 40px; }
+            .screenshots { gap: 16px; padding: 20px 0 60px; }
+            .phone-frame { width: 160px; min-width: 160px; }
+            .phone-frame:nth-child(2) { transform: translateY(-8px); }
+            .steps { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-icon">🔥</div>
+        <h1>Promise yourself.<br><span>Follow through.</span></h1>
+        <p class="tagline">Capture your late-night motivation. Get reminded on your schedule. Track if you actually did it.</p>
+        <a class="coming-soon" href="#">Coming Soon to the App Store</a>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="screenshots">
+        <div class="phone-frame">
+            <div class="phone-placeholder">
+                <div>
+                    <div style="font-size: 32px; margin-bottom: 8px;">✍️</div>
+                    Capture Screen<br><small style="opacity:0.5;">Replace with screenshot</small>
+                </div>
+            </div>
+        </div>
+        <div class="phone-frame">
+            <div class="phone-placeholder">
+                <div>
+                    <div style="font-size: 32px; margin-bottom: 8px;">📋</div>
+                    Promises List<br><small style="opacity:0.5;">Replace with screenshot</small>
+                </div>
+            </div>
+        </div>
+        <div class="phone-frame">
+            <div class="phone-placeholder">
+                <div>
+                    <div style="font-size: 32px; margin-bottom: 8px;">📊</div>
+                    Stats Screen<br><small style="opacity:0.5;">Replace with screenshot</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Capture</h3>
+                <p>It's late. You're motivated. Type or speak what you want to change. NightFuel saves it — text and voice.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Remind</h3>
+                <p>Pick when morning-you needs to hear it. NightFuel sends a notification with your promise and your first step.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Follow Through</h3>
+                <p>Did you do it? Tap yes or snooze. NightFuel tracks your follow-through rate so you can see your real patterns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title">Built for Real Life</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <div class="feature-icon">🎙️</div>
+                <div>
+                    <h3>Voice or Text</h3>
+                    <p>Speak your promise and NightFuel transcribes it automatically. Or just type. Both work from the same screen.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔔</div>
+                <div>
+                    <h3>Smart Reminders</h3>
+                    <p>Get nudged at the exact time you choose. Missed it? NightFuel tries again in 2 hours before marking it.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔊</div>
+                <div>
+                    <h3>Hear Yourself</h3>
+                    <p>Play back your original voice recording in the morning. There's something powerful about hearing night-you talk to morning-you.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div>
+                    <h3>Follow-Through Stats</h3>
+                    <p>See your kept-vs-missed ratio, current streak, and trends. No judgment — just honest data about your patterns.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌙</div>
+                <div>
+                    <h3>Dark Mode Only</h3>
+                    <p>Designed for late-night use. Midnight blue palette that won't blast your eyes at 11pm.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div>
+                    <h3>100% Private</h3>
+                    <p>Everything stays on your device. No accounts, no cloud, no analytics. Your promises are yours alone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="privacy">
+        <div class="privacy-badge">
+            <span>🛡️</span>
+            No accounts. No cloud. No tracking. Ever.
+        </div>
+        <p>NightFuel stores everything locally on your iPhone. We don't collect any data.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="support.html">Support</a>
+            <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a>
+        </div>
+        <p class="copyright">&copy; 2026 Casey Lester. All rights reserved.</p>
+    </footer>
+</div>
+
+</body>
+</html>
