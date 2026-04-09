@@ -49,8 +49,8 @@
         }
         li { margin-bottom: 6px; }
         .contact-box {
-            background: #f0f4ff;
-            border-left: 3px solid #2563eb;
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
             padding: 16px;
             border-radius: 4px;
             margin: 16px 0;
@@ -85,73 +85,78 @@
         <p class="subtitle">We're here to help.</p>
 
         <div class="contact-box">
-            <p><strong style="color: #1a1d29;">Need help?</strong> Email us at <span style="color: #2563eb;">caseylester@airpost.net</span> and we'll get back to you as soon as possible.</p>
+            <p><strong style="color: #1a1d29;">Need help?</strong> Email us at <a href="mailto:nightfuel.app@airpost.net" style="color: #92400e;">nightfuel.app@airpost.net</a> and we'll get back to you as soon as possible.</p>
         </div>
 
         <h2>Frequently Asked Questions</h2>
 
         <div class="faq-item">
-            <strong>How do I record a promise?</strong>
-            <p>On the Capture tab, type your promise in the text field or tap the microphone icon to record it with your voice. NightFuel will automatically transcribe what you say. Then do the same for your first step. Choose a reminder time and tap Save Promise.</p>
+            <strong>How do I make a promise?</strong>
+            <p>Tap the Capture tab at the bottom of the screen. Speak or type your promise, then speak or type your first step — the one concrete thing you'll do to follow through. Set a reminder time and tap Save. That's it.</p>
         </div>
 
         <div class="faq-item">
-            <strong>When will I be reminded?</strong>
-            <p>NightFuel sends you a notification at the time you choose when saving your promise. You can set a default reminder time in Settings, or customize it per promise.</p>
+            <strong>Can I record my promise with my voice?</strong>
+            <p>Yes. On the Capture screen, tap the microphone icon to record. NightFuel transcribes your recording automatically using Apple's on-device speech recognition. You can also type manually — both options are always available.</p>
         </div>
 
         <div class="faq-item">
-            <strong>What happens when I tap "Not yet"?</strong>
-            <p>NightFuel will remind you again in 2 hours. If you tap "Not yet" a second time, the promise is marked as missed. You can always mark a missed promise as completed later from the Promises list.</p>
+            <strong>When will I get reminded?</strong>
+            <p>NightFuel sends a local notification at the time you chose when saving your promise. You can set a default reminder time in Settings, or pick a custom time per promise.</p>
+        </div>
+
+        <div class="faq-item">
+            <strong>What happens when my reminder fires?</strong>
+            <p>Your completion window opens. You'll get a notification showing your promise and the time your window closes. Tap it to open the promise — you'll see your promise text, your first step, and your original recording if you used your voice. Tap <em>Yes, I did it</em> to mark it complete. If the window closes before you do, the promise is automatically marked missed.</p>
+        </div>
+
+        <div class="faq-item">
+            <strong>What is the completion window?</strong>
+            <p>The completion window is how long you have to follow through after a reminder fires. You choose the window length (1–12 hours) when you save each promise, and you can set a default in Settings. When the window closes, a second notification fires and any unfollowed promise is automatically marked missed. There's no extension — commit to the window when you're motivated to.</p>
         </div>
 
         <div class="faq-item">
             <strong>Can I listen to my original recording?</strong>
-            <p>Yes. If you recorded a promise with your voice, tap the promise in the Promises list to open it, then tap "Listen to original" to hear your recording.</p>
-        </div>
-
-        <div class="faq-item">
-            <strong>Where is my data stored?</strong>
-            <p>All data — text, recordings, and preferences — is stored locally on your device. Nothing is uploaded to any server. See our <a href="privacy.html" style="color: #2563eb;">Privacy Policy</a> for full details.</p>
+            <p>Yes. Tap any promise in the Promises list to open it. If you recorded audio, you'll see a <em>Listen to audio</em> button below the promise text and another below your first step. Tap to play, tap again to stop.</p>
         </div>
 
         <div class="faq-item">
             <strong>How do I delete a promise?</strong>
-            <p>In the Promises tab, swipe left on any promise to delete it. To delete all data, go to Settings → Clear all data.</p>
+            <p>In the Promises tab, swipe left on any promise and tap Delete. To delete everything at once, go to Settings → Clear all data.</p>
         </div>
 
         <div class="faq-item">
-            <strong>How do I export my promises?</strong>
-            <p>Go to Settings → Export all promises. This creates a JSON file you can save or share however you like.</p>
+            <strong>Where is my data stored?</strong>
+            <p>Everything — promise text, voice recordings, reminder times, and follow-through status — is stored locally on your device. Nothing is sent to any server. See our <a href="privacy.html" style="color: #2563eb;">Privacy Policy</a> for full details.</p>
         </div>
 
         <div class="faq-item">
             <strong>Transcription isn't working. What do I do?</strong>
-            <p>Make sure you've granted NightFuel permission for both Microphone and Speech Recognition. You can check in iOS Settings → NightFuel. If transcription still fails, you can always type your promise manually — the text field is always available.</p>
+            <p>Check that NightFuel has been granted Microphone and Speech Recognition access. Go to iOS Settings → Privacy & Security → Microphone (and Speech Recognition) and make sure NightFuel is enabled. You can also check permission status in NightFuel's own Settings tab. If transcription still fails, you can always type your promise manually.</p>
         </div>
 
         <div class="faq-item">
             <strong>I'm not getting notifications.</strong>
-            <p>Check that notifications are enabled for NightFuel in iOS Settings → Notifications → NightFuel. Also make sure the Reminders toggle is on in NightFuel's Settings tab. If you're using Focus modes, ensure NightFuel is allowed through.</p>
+            <p>Go to iOS Settings → Notifications → NightFuel and make sure notifications are allowed. If you use Focus modes, check that NightFuel is permitted to break through. You can also verify notification permission status in NightFuel's Settings tab.</p>
         </div>
 
         <div class="faq-item">
-            <strong>Can I change the reminder time after saving?</strong>
-            <p>Tap the promise in the Promises list, then choose "Remind me later" to pick a new time.</p>
+            <strong>What do the different promise statuses mean?</strong>
+            <p><em>Pending</em> — saved, waiting for the reminder time. <em>Reminded</em> — the reminder has fired and the completion window is counting down. <em>Completed</em> — you marked it done. <em>Missed</em> — the window closed before you followed through.</p>
         </div>
 
         <h2>App Requirements</h2>
         <ul>
             <li>iOS 17.0 or later</li>
             <li>iPhone</li>
-            <li>Microphone access (optional, for voice recording)</li>
-            <li>Speech Recognition (optional, for transcription)</li>
-            <li>Notifications (recommended, for reminders)</li>
+            <li>Microphone access (optional — required for voice recording)</li>
+            <li>Speech Recognition (optional — required for transcription)</li>
+            <li>Notifications (recommended — required for reminders)</li>
         </ul>
 
         <h2>Contact Us</h2>
         <p>For bug reports, feature requests, or any other questions:</p>
-        <p style="color: #2563eb;">caseylester@airpost.net</p>
+        <p><a href="mailto:nightfuel.app@airpost.net" style="color: #2563eb;">nightfuel.app@airpost.net</a></p>
 
         <div class="footer">
             <p>&copy; 2026 Casey Lester. All rights reserved.</p>

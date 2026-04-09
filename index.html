@@ -4,429 +4,875 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NightFuel — Promise yourself. Follow through.</title>
-    <meta name="description" content="Capture your late-night motivation. Get reminded on your schedule. Track if you follow through. Free for iPhone.">
+    <meta name="description" content="Capture your late-night motivation. Record promises in your own voice. Get reminded and track if you actually follow through. Free for iPhone.">
+    <meta property="og:title" content="NightFuel — Promise yourself. Follow through.">
+    <meta property="og:description" content="Capture your late-night motivation. Record promises in your own voice. Get reminded and track if you actually follow through.">
+    <meta property="og:image" content="AppIcon.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0f1119;
-            --bg-card: #1a1d29;
+            --bg: #090c12;
+            --bg-mid: #0d1019;
+            --bg-card: #111521;
+            --bg-card-hover: #151a27;
             --accent: #f59e0b;
-            --accent-soft: rgba(245, 158, 11, 0.12);
-            --text: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --success: #22c55e;
-            --border: #2a2d3a;
+            --accent-dim: rgba(245, 158, 11, 0.13);
+            --text: #eaecf2;
+            --text-mid: #b8bcc8;
+            --text-muted: #6b7280;
+            --border: rgba(255,255,255,0.06);
+            --border-mid: rgba(255,255,255,0.11);
         }
 
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Outfit', sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Stars background */
-        body::before {
+        /* Grain */
+        body::after {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1px 1px at 85% 90%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1.5px 1.5px at 60% 85%, rgba(245,158,11,0.4), transparent),
-                radial-gradient(1.5px 1.5px at 20% 50%, rgba(245,158,11,0.3), transparent);
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022;
             pointer-events: none;
-            z-index: 0;
+            z-index: 9999;
         }
 
+        /* Atmosphere */
+        .bg-atmosphere {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse 80% 40% at 50% -5%, rgba(245,158,11,0.04) 0%, transparent 60%);
+        }
+
+        /* Stars */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.45), transparent),
+                radial-gradient(1px 1px at 23% 7%, rgba(255,255,255,0.35), transparent),
+                radial-gradient(1.5px 1.5px at 38% 22%, rgba(255,255,255,0.28), transparent),
+                radial-gradient(1px 1px at 55% 8%, rgba(255,255,255,0.45), transparent),
+                radial-gradient(1px 1px at 67% 17%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 79% 5%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 91% 14%, rgba(255,255,255,0.28), transparent),
+                radial-gradient(1px 1px at 14% 31%, rgba(255,255,255,0.22), transparent),
+                radial-gradient(1px 1px at 44% 38%, rgba(255,255,255,0.18), transparent),
+                radial-gradient(1px 1px at 72% 28%, rgba(255,255,255,0.28), transparent),
+                radial-gradient(1.5px 1.5px at 31% 55%, rgba(245,158,11,0.3), transparent),
+                radial-gradient(1px 1px at 62% 48%, rgba(245,158,11,0.2), transparent),
+                radial-gradient(1px 1px at 5% 68%, rgba(255,255,255,0.22), transparent),
+                radial-gradient(1px 1px at 96% 72%, rgba(255,255,255,0.2), transparent);
+        }
+
+        /* Layout */
         .container {
-            max-width: 960px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 32px;
             position: relative;
             z-index: 1;
         }
 
-        /* Hero */
-        .hero {
-            text-align: center;
-            padding: 80px 0 60px;
+        /* ─── Nav ─── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            background: rgba(9, 12, 18, 0.82);
+            border-bottom: 1px solid var(--border);
         }
 
-        .hero-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 18px;
-            background: var(--accent);
-            margin: 0 auto 24px;
+        .nav-inner {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+            justify-content: space-between;
+            height: 58px;
         }
 
-        .hero h1 {
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--accent), #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero .tagline {
-            font-size: clamp(18px, 3vw, 22px);
-            color: var(--text-secondary);
-            max-width: 480px;
-            margin: 0 auto 32px;
-            font-weight: 400;
-        }
-
-        .app-store-badge {
-            display: inline-block;
-            transition: transform 0.2s;
-        }
-        .app-store-badge:hover { transform: scale(1.05); }
-        .app-store-badge img { height: 52px; }
-
-        .coming-soon {
-            display: inline-block;
-            padding: 12px 32px;
-            background: var(--accent);
-            color: #000;
-            font-weight: 700;
-            font-size: 16px;
-            border-radius: 12px;
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             text-decoration: none;
         }
-
-        /* Phone mockups */
-        .screenshots {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 40px 0 80px;
-            overflow-x: auto;
+        .nav-logo img {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
         }
-
-        .phone-frame {
-            width: 220px;
-            min-width: 220px;
-            background: var(--bg-card);
-            border-radius: 28px;
-            border: 2px solid var(--border);
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
-        }
-        .phone-frame:hover { transform: translateY(-8px); }
-        .phone-frame:nth-child(2) { transform: translateY(-16px); }
-        .phone-frame:nth-child(2):hover { transform: translateY(-24px); }
-
-        .phone-frame img {
-            width: 100%;
-            display: block;
-        }
-
-        .phone-placeholder {
-            aspect-ratio: 9/19.5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* How it works */
-        .how-it-works {
-            padding: 60px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 32px;
+        .nav-logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 48px;
+            color: var(--text);
             letter-spacing: -0.02em;
         }
 
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
+        .nav-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 16px;
+            background: transparent;
+            border: 1px solid var(--border-mid);
+            color: var(--text-mid);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .nav-download svg { width: 13px; height: 13px; opacity: 0.7; }
+        .nav-download:hover {
+            border-color: rgba(255,255,255,0.22);
+            color: var(--text);
+            background: rgba(255,255,255,0.04);
         }
 
-        .step {
+        /* ─── Hero ─── */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 64px;
+            align-items: center;
+            padding: 96px 0 80px;
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(46px, 5.5vw, 70px);
+            font-weight: 900;
+            line-height: 1.0;
+            letter-spacing: -0.035em;
+            margin-bottom: 22px;
+        }
+        .hero h1 em {
+            color: var(--accent);
+            font-style: italic;
+            display: block;
+        }
+
+        .hero-tagline {
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text-mid);
+            max-width: 420px;
+            font-weight: 300;
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-phone {
+            width: 258px;
+            border-radius: 38px;
+            border: 1.5px solid rgba(255,255,255,0.11);
+            overflow: hidden;
+            box-shadow:
+                0 0 0 8px rgba(255,255,255,0.025),
+                0 48px 96px rgba(0,0,0,0.75);
+            animation: phone-float 7s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes phone-float {
+            0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+            50% { transform: translateY(-14px) rotate(-1.2deg); }
+        }
+        .hero-phone img { width: 100%; display: block; }
+
+        /* ─── Section label ─── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 0;
+        }
+        .section-label-text {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .section-label-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─── Bento Features ─── */
+        .features-section {
+            padding: 80px 0 96px;
+        }
+        .features-section .section-label {
+            margin-bottom: 48px;
+        }
+
+        .bento {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .bento-cell {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 24px;
-            text-align: center;
+            border-radius: 20px;
+            padding: 28px 28px 26px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s;
+        }
+        .bento-cell:hover { border-color: var(--border-mid); }
+
+        .bento-cell h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            margin-top: 22px;
+        }
+        .bento-cell p {
+            font-size: 13.5px;
+            color: var(--text-mid);
+            line-height: 1.72;
+            font-weight: 300;
         }
 
-        .step-number {
-            width: 48px;
-            height: 48px;
+        /* Grid layout */
+        .bento-a { grid-column: 1 / span 2; min-height: 276px; }
+        .bento-b { grid-column: 3; }
+        .bento-c { grid-column: 1; }
+        .bento-d { grid-column: 2 / span 2; min-height: 268px; }
+
+        /* ─── Cell A: Voice Capture ─── */
+        .bento-a { background: linear-gradient(150deg, #12162a 0%, #0e1120 100%); }
+        .bento-a::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -5%;
+            width: 55%;
+            height: 110%;
+            background: radial-gradient(ellipse, rgba(245,158,11,0.08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: 58px;
+        }
+        .waveform span {
+            display: block;
+            width: 4px;
+            border-radius: 2px;
+            background: var(--accent);
+            animation: wv 1.8s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .waveform span:nth-child(1)  { height: 12px; animation-delay: 0s; }
+        .waveform span:nth-child(2)  { height: 22px; animation-delay: 0.12s; }
+        .waveform span:nth-child(3)  { height: 40px; animation-delay: 0.24s; }
+        .waveform span:nth-child(4)  { height: 28px; animation-delay: 0.06s; }
+        .waveform span:nth-child(5)  { height: 50px; animation-delay: 0.18s; }
+        .waveform span:nth-child(6)  { height: 58px; animation-delay: 0.30s; }
+        .waveform span:nth-child(7)  { height: 44px; animation-delay: 0.08s; }
+        .waveform span:nth-child(8)  { height: 36px; animation-delay: 0.20s; }
+        .waveform span:nth-child(9)  { height: 52px; animation-delay: 0.14s; }
+        .waveform span:nth-child(10) { height: 42px; animation-delay: 0.26s; }
+        .waveform span:nth-child(11) { height: 30px; animation-delay: 0.04s; }
+        .waveform span:nth-child(12) { height: 18px; animation-delay: 0.16s; }
+        .waveform span:nth-child(13) { height: 14px; animation-delay: 0.10s; }
+        @keyframes wv {
+            0%, 100% { transform: scaleY(0.35); opacity: 0.28; }
+            50% { transform: scaleY(1); opacity: 0.92; }
+        }
+
+        /* ─── Cell B: Hear Yourself ─── */
+        .playback-vis {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .play-ring {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 20px;
+            border: 1.5px solid rgba(245,158,11,0.55);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .step h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .step p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* Features */
-        .features {
-            padding: 60px 0;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .feature {
-            display: flex;
-            gap: 16px;
-            padding: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-
-        .feature-icon {
-            font-size: 24px;
             flex-shrink: 0;
         }
+        .play-tri {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 7px 0 7px 12px;
+            border-color: transparent transparent transparent rgba(245,158,11,0.65);
+            margin-left: 3px;
+        }
+        .pb-bars {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .pb-bars span {
+            display: block;
+            width: 3px;
+            border-radius: 1.5px;
+            background: rgba(245,158,11,0.32);
+        }
 
-        .feature h3 {
-            font-size: 15px;
+        /* ─── Cell C: Reminders ─── */
+        .notif-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 13px 15px;
+        }
+        .notif-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+        .notif-moon { font-size: 13px; }
+        .notif-app-name {
+            font-size: 10.5px;
             font-weight: 600;
-            margin-bottom: 4px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            flex: 1;
         }
-
-        .feature p {
+        .notif-time { font-size: 10.5px; color: var(--text-muted); }
+        .notif-body {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+        .notif-step { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
+
+        /* ─── Cell D: Follow Through ─── */
+        .bento-d { background: linear-gradient(150deg, #0f1a15 0%, #0e1218 100%); }
+        .bento-d::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -5%;
+            width: 55%;
+            height: 110%;
+            background: radial-gradient(ellipse, rgba(52,211,153,0.07) 0%, transparent 65%);
+            pointer-events: none;
         }
 
-        /* Privacy callout */
+        .stat-vis { position: relative; z-index: 1; }
+
+        .big-pct {
+            font-family: 'Fraunces', serif;
+            font-size: 56px;
+            font-weight: 900;
+            color: #34d399;
+            letter-spacing: -0.045em;
+            line-height: 1;
+            display: block;
+        }
+        .big-pct small { font-size: 30px; }
+        .pct-label {
+            font-size: 11px;
+            color: rgba(52,211,153,0.45);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: block;
+            margin-top: 4px;
+            margin-bottom: 20px;
+        }
+
+        .week-bars {
+            display: flex;
+            gap: 7px;
+            align-items: flex-end;
+            height: 44px;
+        }
+        .wk-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            height: 100%;
+        }
+        .wk-track {
+            flex: 1;
+            width: 100%;
+            background: rgba(52,211,153,0.07);
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+        .wk-fill {
+            width: 100%;
+            height: var(--h);
+            background: rgba(52,211,153,0.52);
+            border-radius: 3px 3px 0 0;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition-delay: var(--delay, 0s);
+        }
+        .bento-d.visible .wk-fill { transform: scaleY(1); }
+        .wk-day { font-size: 9.5px; color: var(--text-muted); font-weight: 500; }
+
+        /* ─── Screenshots ─── */
+        .screenshots-section { padding: 80px 0 96px; }
+
+        .screenshots-section .section-label { margin-bottom: 52px; }
+
+        .screenshots {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 24px;
+        }
+
+        .screenshot-wrap { position: relative; }
+
+        .screenshot-wrap:nth-child(1) .phone-frame { transform: rotate(-3deg) translateY(22px); }
+        .screenshot-wrap:nth-child(2) .phone-frame { transform: rotate(0deg) translateY(0); z-index: 2; }
+        .screenshot-wrap:nth-child(3) .phone-frame { transform: rotate(3deg) translateY(22px); }
+
+        .phone-frame {
+            width: 212px;
+            border-radius: 34px;
+            border: 1.5px solid rgba(255,255,255,0.09);
+            overflow: hidden;
+            box-shadow:
+                0 32px 64px rgba(0,0,0,0.65),
+                0 0 0 6px rgba(255,255,255,0.02);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+        }
+
+        .screenshot-wrap:nth-child(1) .phone-frame:hover { transform: rotate(-1deg) translateY(14px) scale(1.04); }
+        .screenshot-wrap:nth-child(2) .phone-frame:hover { transform: rotate(0deg) translateY(-14px) scale(1.04); }
+        .screenshot-wrap:nth-child(3) .phone-frame:hover { transform: rotate(1deg) translateY(14px) scale(1.04); }
+
+        .phone-frame img { width: 100%; display: block; }
+
+        /* ─── Privacy pills ─── */
         .privacy {
-            text-align: center;
-            padding: 60px 0;
+            padding: 40px 0 80px;
         }
 
-        .privacy-badge {
+        .privacy-pills {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .privacy-pill {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 16px 28px;
+            gap: 9px;
+            padding: 11px 20px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 500;
+            border-radius: 100px;
+            font-size: 13.5px;
+            color: var(--text-mid);
+            font-weight: 400;
         }
+        .privacy-pill-icon { font-size: 15px; }
 
-        .privacy-badge span {
-            font-size: 22px;
-        }
-
-        .privacy p {
-            margin-top: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* Footer */
-        .footer {
+        /* ─── CTA ─── */
+        .cta-section {
+            padding: 80px 0 120px;
             text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid var(--border);
         }
+
+        .cta-inner { max-width: 560px; margin: 0 auto; }
+
+        .cta-section h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(38px, 5.5vw, 60px);
+            font-weight: 900;
+            letter-spacing: -0.035em;
+            line-height: 1.0;
+            margin-bottom: 18px;
+        }
+        .cta-section h2 em { font-style: italic; color: var(--accent); }
+
+        .cta-section p {
+            font-size: 17px;
+            color: var(--text-mid);
+            margin-bottom: 44px;
+            font-weight: 300;
+            line-height: 1.65;
+        }
+
+        .cta-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #fff;
+            border-radius: 13px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .cta-download svg { width: 28px; height: 28px; flex-shrink: 0; }
+        .cta-download-text { line-height: 1; text-align: left; }
+        .cta-download-text small {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 3px;
+        }
+        .cta-download-text strong {
+            display: block;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+        .cta-download:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 36px 0;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .footer-logo {
+            font-family: 'Fraunces', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: color 0.2s;
+        }
+        .footer-logo:hover { color: var(--text-mid); }
 
         .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 16px;
+            gap: 26px;
         }
-
         .footer-links a {
-            color: var(--text-secondary);
+            font-size: 13px;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 14px;
             transition: color 0.2s;
         }
-        .footer-links a:hover { color: var(--accent); }
+        .footer-links a:hover { color: var(--text-mid); }
 
-        .footer .copyright {
-            font-size: 13px;
-            color: var(--text-secondary);
-            opacity: 0.6;
+        .footer-copy {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.45;
         }
 
-        /* Mobile */
-        @media (max-width: 640px) {
-            .hero { padding: 60px 0 40px; }
-            .screenshots { gap: 16px; padding: 20px 0 60px; }
-            .phone-frame { width: 160px; min-width: 160px; }
-            .phone-frame:nth-child(2) { transform: translateY(-8px); }
-            .steps { grid-template-columns: 1fr; }
+        /* ─── Scroll reveal ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+
+        /* ─── Mobile ─── */
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 56px 0 16px;
+                gap: 48px;
+                text-align: center;
+            }
+            .hero-tagline { margin: 0 auto; }
+            .hero-visual { display: none; }
+
+            .bento { grid-template-columns: 1fr; }
+            .bento-a, .bento-d { grid-column: auto; min-height: auto; }
+            .bento-b, .bento-c { grid-column: auto; }
+
+            .screenshots { gap: 12px; overflow-x: auto; justify-content: flex-start; padding-bottom: 8px; }
+            .phone-frame { width: 155px; }
+            .screenshot-wrap:nth-child(1) .phone-frame,
+            .screenshot-wrap:nth-child(3) .phone-frame { transform: none; }
+
+            .footer-inner { flex-direction: column; text-align: center; }
+            .footer-links { flex-wrap: wrap; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 18px; }
+            .hero h1 { font-size: 42px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Hero -->
-    <section class="hero">
-        <img src="AppIcon.png" alt="NightFuel" style="width: 80px; height: 80px; border-radius: 18px; margin: 0 auto 24px; display: block; box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);">
-        <h1>Promise yourself.<br><span>Follow through.</span></h1>
-        <p class="tagline">Capture your late-night motivation. Get reminded on your schedule. Track if you actually did it.</p>
-        <a class="coming-soon" href="#">Coming Soon to the App Store</a>
-    </section>
+<div class="bg-atmosphere"></div>
+<div class="stars"></div>
 
-    <!-- Screenshots -->
-    <section class="screenshots">
-        <div class="phone-frame">
-            <img src="screenshot-capture.png" alt="NightFuel Capture Screen">
+<!-- Nav -->
+<nav>
+    <div class="container">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <img src="AppIcon.png" alt="NightFuel">
+                <span class="nav-logo-text">NightFuel</span>
+            </a>
+            <a href="#download" class="nav-download">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                Download
+            </a>
         </div>
-        <div class="phone-frame">
-            <img src="screenshot-promises.png" alt="NightFuel Promises List">
-        </div>
-        <div class="phone-frame">
-            <img src="screenshot-stats.png" alt="NightFuel Stats Screen">
-        </div>
-    </section>
+    </div>
+</nav>
 
-    <!-- How It Works -->
-    <section class="how-it-works">
-        <h2 class="section-title">How It Works</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Capture</h3>
-                <p>It's late. You're motivated. Type or speak what you want to change. NightFuel saves it — text and voice.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Remind</h3>
-                <p>Pick when morning-you needs to hear it. NightFuel sends a notification with your promise and your first step.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Follow Through</h3>
-                <p>Did you do it? Tap yes or snooze. NightFuel tracks your follow-through rate so you can see your real patterns.</p>
-            </div>
+<!-- Hero -->
+<section class="hero container">
+    <div class="hero-content">
+        <h1>
+            Promise yourself.<br>
+            <em>Follow through.</em>
+        </h1>
+        <p class="hero-tagline">Capture your late-night motivation. Hear your own voice in the morning. See if you actually did it.</p>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-glow"></div>
+        <div class="hero-phone">
+            <img src="screenshot-promises.png" alt="NightFuel Promises">
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Features -->
-    <section class="features">
-        <h2 class="section-title">Built for Real Life</h2>
-        <div class="feature-grid">
-            <div class="feature">
-                <div class="feature-icon">🎙️</div>
-                <div>
-                    <h3>Voice or Text</h3>
-                    <p>Speak your promise and NightFuel transcribes it automatically. Or just type. Both work from the same screen.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🔔</div>
-                <div>
-                    <h3>Smart Reminders</h3>
-                    <p>Get nudged at the exact time you choose. Missed it? NightFuel tries again in 2 hours before marking it.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🔊</div>
-                <div>
-                    <h3>Hear Yourself</h3>
-                    <p>Play back your original voice recording in the morning. There's something powerful about hearing night-you talk to morning-you.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📊</div>
-                <div>
-                    <h3>Follow-Through Stats</h3>
-                    <p>See your kept-vs-missed ratio, current streak, and trends. No judgment — just honest data about your patterns.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🌙</div>
-                <div>
-                    <h3>Dark Mode Only</h3>
-                    <p>Designed for late-night use. Midnight blue palette that won't blast your eyes at 11pm.</p>
-                </div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🔒</div>
-                <div>
-                    <h3>100% Private</h3>
-                    <p>Everything stays on your device. No accounts, no cloud, no analytics. Your promises are yours alone.</p>
-                </div>
-            </div>
+<!-- Features Bento -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-label reveal">
+            <span class="section-label-text">How it works</span>
+            <div class="section-label-line"></div>
         </div>
-    </section>
 
-    <!-- Privacy -->
-    <section class="privacy">
-        <div class="privacy-badge">
-            <span>🛡️</span>
-            No accounts. No cloud. No tracking. Ever.
-        </div>
-        <p>NightFuel stores everything locally on your iPhone. We don't collect any data.</p>
-    </section>
+        <div class="bento">
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="support.html">Support</a>
-            <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a>
+            <!-- A: Voice Capture -->
+            <div class="bento-cell bento-a reveal">
+                <div class="waveform" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                </div>
+                <h3>Speak it. Mean it.</h3>
+                <p>Record your promise in your own voice — then name the very first step you'll take. Both captured in one late-night moment before the feeling fades.</p>
+            </div>
+
+            <!-- B: Hear Yourself -->
+            <div class="bento-cell bento-b reveal reveal-delay-1">
+                <div class="playback-vis" aria-hidden="true">
+                    <div class="play-ring"><div class="play-tri"></div></div>
+                    <div class="pb-bars">
+                        <span style="height:14px"></span>
+                        <span style="height:26px"></span>
+                        <span style="height:18px"></span>
+                        <span style="height:32px"></span>
+                        <span style="height:22px"></span>
+                        <span style="height:12px"></span>
+                        <span style="height:20px"></span>
+                        <span style="height:28px"></span>
+                    </div>
+                </div>
+                <h3>Your own voice in the morning.</h3>
+                <p>Play back your recording with the reminder. Night-you talking to morning-you is hard to ignore.</p>
+            </div>
+
+            <!-- C: Reminders -->
+            <div class="bento-cell bento-c reveal">
+                <div class="notif-card" aria-hidden="true">
+                    <div class="notif-header">
+                        <span class="notif-moon">🌙</span>
+                        <span class="notif-app-name">NightFuel</span>
+                        <span class="notif-time">7:00 AM</span>
+                    </div>
+                    <p class="notif-body">"Start that project after coffee."</p>
+                    <p class="notif-step">First step: Open the doc and write one sentence.</p>
+                </div>
+                <h3>Timed to your day.</h3>
+                <p>Pick exactly when you need accountability. Your window opens when the reminder fires — follow through before it closes.</p>
+            </div>
+
+            <!-- D: Follow Through -->
+            <div class="bento-cell bento-d reveal reveal-delay-1">
+                <div class="stat-vis" aria-hidden="true">
+                    <span class="big-pct">73<small>%</small></span>
+                    <span class="pct-label">Follow-through rate</span>
+                    <div class="week-bars">
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:82%;--delay:0s"></div></div><span class="wk-day">M</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:50%;--delay:.1s"></div></div><span class="wk-day">T</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:100%;--delay:.2s"></div></div><span class="wk-day">W</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:67%;--delay:.3s"></div></div><span class="wk-day">T</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:83%;--delay:.4s"></div></div><span class="wk-day">F</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:33%;--delay:.5s"></div></div><span class="wk-day">S</span></div>
+                        <div class="wk-bar"><div class="wk-track"><div class="wk-fill" style="--h:0%;--delay:.6s"></div></div><span class="wk-day">S</span></div>
+                    </div>
+                </div>
+                <h3>Did you actually do it?</h3>
+                <p>One tap closes the loop. See your follow-through rate build over time — honest data about how you actually operate.</p>
+            </div>
+
         </div>
-        <p class="copyright">&copy; 2026 Casey Lester. All rights reserved.</p>
-    </footer>
-</div>
+    </div>
+</section>
+
+<!-- Screenshots -->
+<section class="screenshots-section">
+    <div class="container">
+        <div class="section-label reveal">
+            <span class="section-label-text">The app</span>
+            <div class="section-label-line"></div>
+        </div>
+        <div class="screenshots" style="margin-top: 52px;">
+            <div class="screenshot-wrap reveal">
+                <div class="phone-frame">
+                    <img src="screenshot-capture.png" alt="Capture a promise">
+                </div>
+            </div>
+            <div class="screenshot-wrap reveal reveal-delay-1">
+                <div class="phone-frame">
+                    <img src="screenshot-promises.png" alt="Your promises">
+                </div>
+            </div>
+            <div class="screenshot-wrap reveal reveal-delay-2">
+                <div class="phone-frame">
+                    <img src="screenshot-stats.png" alt="Stats">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Privacy -->
+<section class="privacy">
+    <div class="container">
+        <div class="privacy-pills">
+            <div class="privacy-pill reveal">
+                <span class="privacy-pill-icon">🛡️</span>
+                Stored entirely on your iPhone
+            </div>
+            <div class="privacy-pill reveal reveal-delay-1">
+                <span class="privacy-pill-icon">👤</span>
+                No account required
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section id="download" class="cta-section">
+    <div class="container">
+        <div class="cta-inner">
+            <h2 class="reveal">Start keeping your<br><em>promises.</em></h2>
+            <p class="reveal reveal-delay-1">No account required. Works the moment you open it.</p>
+            <a href="#" class="cta-download reveal reveal-delay-2">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                <div class="cta-download-text">
+                    <small>Download on the</small>
+                    <strong>App Store</strong>
+                </div>
+
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <a href="#" class="footer-logo">NightFuel</a>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a>
+                <a href="support.html">Support</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Casey Lester</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
